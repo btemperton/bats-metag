@@ -1,0 +1,23 @@
+#!/bin/bash
+#PBS -q single
+#PBS -l nodes=1:ppn=1
+#PBS -l walltime=24:00:00
+#PBS -o 113-80.interleave
+#PBS -N bt.113-80.interleave
+#PBS -A hpc_compgen01
+mkdir /project/jcthrash/tempertb/bats/raw_reads/113-80/trim
+cd /project/jcthrash/tempertb/bats/raw_reads/113-80/trim
+echo "Interleaving..."
+/project/jcthrash/tempertb/tools/khmer/scripts/interleave-reads.py /project/jcthrash/tempertb/bats/raw_reads/113-80/s?_pe > /project/jcthrash/tempertb/bats/raw_reads/113-80/trim/combined.fq
+echo "Quality filtering combined file"
+fastq_quality_filter -Q33 -q 30 -p 50 -i /project/jcthrash/tempertb/bats/raw_reads/113-80/trim/combined.fq > /project/jcthrash/tempertb/bats/raw_reads/113-80/trim/combined-trim.fq
+echo "Quality filtering singles"
+fastq_quality_filter -Q33 -q 30 -p 50 -i /project/jcthrash/tempertb/bats/raw_reads/113-80/s1_se > /project/jcthrash/tempertb/bats/raw_reads/113-80/trim/s1_se.trim
+fastq_quality_filter -Q33 -q 30 -p 50 -i /project/jcthrash/tempertb/bats/raw_reads/113-80/s2_se > /project/jcthrash/tempertb/bats/raw_reads/113-80/trim/s2_se.trim
+echo "Extracting paired reads"
+/project/jcthrash/tempertb/tools/khmer/scripts/extract-paired-reads.py /project/jcthrash/tempertb/bats/raw_reads/113-80/trim/combined-trim.fq
+gzip -9c /project/jcthrash/tempertb/bats/raw_reads/113-80/trim/combined-trim.fq.pe >  /project/jcthrash/tempertb/bats/raw_reads/113-80/113-80.pe.qc.fq.gz
+gzip -9c /project/jcthrash/tempertb/bats/raw_reads/113-80/trim/combined-trim.fq.se /project/jcthrash/tempertb/bats/raw_reads/113-80/trim/s1_se.trim /project/jcthrash/tempertb/bats/raw_reads/113-80/trim/s2_se.trim >  /project/jcthrash/tempertb/bats/raw_reads/113-80/113-80.se.qc.fq.gz
+cd /project/jcthrash/tempertb/bats/raw_reads/113-80
+rm -rf /project/jcthrash/tempertb/bats/raw_reads/113-80/trim
+
