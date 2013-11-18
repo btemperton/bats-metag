@@ -1,0 +1,9 @@
+#!/bin/bash
+#PBS -q checkpt
+#PBS -l nodes=4:ppn=16
+#PBS -l walltime=24:00:00
+#PBS -o 134-0.trimmomatic
+#PBS -N bt.134-0.trimmomatic
+#PBS -A hpc_compgen01
+
+java -jar /project/jcthrash/tempertb/tools/Trimmomatic-0.30/trimmomatic-0.30.jar PE -threads 64 /project/jcthrash/tempertb/bats/raw_reads/134-0/134-0.fwd.fastq.gz /project/jcthrash/tempertb/bats/raw_reads/134-0/134-0.rev.fastq.gz /project/jcthrash/tempertb/bats/raw_reads/134-0/s1_pe /project/jcthrash/tempertb/bats/raw_reads/134-0/s1_se /project/jcthrash/tempertb/bats/raw_reads/134-0/s2_pe /project/jcthrash/tempertb/bats/raw_reads/134-0/s2_se ILLUMINACLIP:/project/jcthrash/tempertb/tools/Trimmomatic-0.30/adapters/TruSeq3-PE.fa:2:30:10
